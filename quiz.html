@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Connaissances Générales</title>
+    <style>
+        /* CSS pour rendre le quiz agréable */
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 50px auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #333; }
+        .quiz-container { padding: 20px; background-color: #f9f9f9; border-radius: 8px; }
+        .question { font-size: 1.2em; margin-bottom: 20px; font-weight: bold; }
+        .options label { display: block; margin: 10px 0; padding: 10px; background-color: white; border: 1px solid #ccc; border-radius: 5px; cursor: pointer; transition: background-color 0.3s; }
+        .options label:hover { background-color: #e6f7ff; }
+        .options input[type="radio"] { margin-right: 10px; }
+        #submit-btn { display: block; width: 100%; padding: 15px; background-color: #007bff; color: white; border: none; border-radius: 5px; font-size: 1.1em; cursor: pointer; margin-top: 20px; }
+        #submit-btn:hover { background-color: #0056b3; }
+        #resultats { margin-top: 25px; text-align: center; font-size: 1.5em; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <h1>Quiz : Connaissances Générales 🧠</h1>
+    
+    <div id="quiz-container" class="quiz-container">
+        </div>
+    
+    <button id="submit-btn">Répondre</button>
+
+    <div id="resultats" class="hidden">
+        </div>
+
+        <script>
+    // 1. Définition des questions
+    const quizQuestions = [
+        {
+            question: "Quel est le plus grand océan du monde ?",
+            options: ["Océan Atlantique", "Océan Pacifique", "Océan Indien", "Océan Arctique"],
+            answer: "Océan Pacifique"
+        },
+        {
+            question: "Qui a écrit 'Les Misérables' ?",
+            options: ["Gustave Flaubert", "Victor Hugo", "Émile Zola", "Albert Camus"],
+            answer: "Victor Hugo"
+        },
+        {
+            question: "Quelle est la capitale de l'Australie ?",
+            options: ["Sydney", "Melbourne", "Canberra", "Perth"],
+            answer: "Canberra"
+        },
+        {
+            question: "Combien de côtés a un hexagone ?",
+            options: ["Cinq", "Six", "Sept", "Huit"],
+            answer: "Six"
+        },
+        {
+            question: "Quel gaz les plantes absorbent-elles pour la photosynthèse ?",
+            options: ["Oxygène", "Azote", "Dioxyde de carbone", "Méthane"],
+            answer: "Dioxyde de carbone"
+        },
+        {
+            question: "Dans quel pays se trouve le mont Everest ?",
+            options: ["Inde", "Chine", "Népal", "Bhoutan"],
+            answer: "Népal"
+        },
+        {
+            question: "Quel élément chimique a le symbole 'Fe' ?",
+            options: ["Fluor", "Fer", "Argent", "Or"],
+            answer: "Fer"
+        },
+        {
+            question: "Quelle est la plus petite planète du système solaire ?",
+            options: ["Mars", "Vénus", "Mercure", "Pluton (planète naine)"],
+            answer: "Mercure"
+        },
+        {
+            question: "Quel célèbre scientifique a développé la théorie de la relativité ?",
+            options: ["Isaac Newton", "Galilée", "Albert Einstein", "Stephen Hawking"],
+            answer: "Albert Einstein"
+        },
+        {
+            question: "Quelle monnaie est utilisée au Japon ?",
+            options: ["Yuan", "Won", "Yen", "Dollar"],
+            answer: "Yen"
+        }
+    ];
+
+    // 2. Récupération des éléments du DOM
+    const quizContainer = document.getElementById('quiz-container');
+    const submitButton = document.getElementById('submit-btn');
+    const resultsContainer = document.getElementById('resultats');
+
+    // 3. Fonction pour afficher toutes les questions
+    function buildQuiz() {
+        quizQuestions.forEach((q, index) => {
+            const questionElement = document.createElement('div');
+            questionElement.classList.add('question');
+            questionElement.textContent = `${index + 1}. ${q.question}`;
+            
+            const optionsElement = document.createElement('div');
+            optionsElement.classList.add('options');
+            
+            q.options.forEach(option => {
+                // Crée le label (la zone cliquable)
+                const label = document.createElement('label');
+                
+                // Crée le bouton radio
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = `question${index}`; // Groupement par nom pour n'autoriser qu'une seule réponse
+                radio.value = option;
+                
+                label.appendChild(radio);
+                label.appendChild(document.createTextNode(option)); // Ajoute le texte de l'option
+                optionsElement.appendChild(label);
+            });
+            
+            quizContainer.appendChild(questionElement);
+            quizContainer.appendChild(optionsElement);
+        });
+    }
+
+    // 4. Fonction pour afficher les résultats
+    function showResults() {
+        let score = 0;
+        
+        // Parcourt chaque question
+        quizQuestions.forEach((q, index) => {
+            // Récupère la réponse sélectionnée pour cette question
+            const selector = `input[name=question${index}]:checked`;
+            const userAnswerElement = document.querySelector(selector);
+            
+            // Si une réponse a été sélectionnée
+            if (userAnswerElement) {
+                const userAnswer = userAnswerElement.value;
+                
+                // Vérifie si la réponse est correcte
+                if (userAnswer === q.answer) {
+                    score++;
+                    // Optionnel : on pourrait marquer l'option en vert ici
+                } else {
+                    // Optionnel : on pourrait marquer l'option en rouge ici
+                }
+            }
+        });
+
+        // Affiche le score final
+        resultsContainer.innerHTML = `
+            🎉 Votre score : ${score} / ${quizQuestions.length} 🎉
+            <p>Félicitations !</p>
+        `;
+        resultsContainer.classList.remove('hidden'); // Affiche le conteneur des résultats
+        submitButton.classList.add('hidden'); // Cache le bouton
+    }
+
+    // 5. Événement de soumission
+    submitButton.addEventListener('click', showResults);
+
+    // Lance la construction du quiz au chargement de la page
+    buildQuiz();
+</script>
+
+    </body>
+</html>
